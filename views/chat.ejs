@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      body {
+        text-align: center;
+      }
+      #root {
+        width: 80%;
+        margin: auto;
+        border: 1px solid black;
+        border-radius: 10px;
+        height: 70vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="name">
+      <input type="text" placeholder="enter your name" id="input" />
+      <button>submit</button>
+    </div>
+    <div id="message" style="display: none">
+      <div id="root"></div>
+
+      <form>
+        <input type="text" name="message" />
+        <input type="submit" value="send" />
+      </form>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      var socket;
+
+      const $name = document.getElementById("name");
+      const $input = document.getElementById("input");
+      const $button = document.getElementsByTagName("button")[0];
+      const $messages = document.getElementById("message");
+      $button.addEventListener("click", () => {
+        socket = io();
+        socket.emit("connection");
+        socket.emit("login", $input.value);
+        $name.style.display="none"
+        $messages.style.display="block"
+        console.log("ehello")
+        socket.on("msg", (msg) => {
+        const $p = document.createElement("p");
+        const $p2 = document.createElement("p");
+        $p2.innerHTML = msg.user;
+        $p.innerHTML = msg.msg;
+        $p.style.display
+        document.getElementById("root").appendChild($p2);
+        document.getElementById("root").appendChild($p);
+      });
+      });
+
+      document
+        .getElementsByTagName("form")[0]
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          const msg = e.target.message.value;
+          e.target.message.value = "";
+          socket.emit("message", { msg, socket: socket.id });
+        });
+
+   
+    </script>
+  </body>
+</html>
